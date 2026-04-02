@@ -1,0 +1,6 @@
+set(CMAKE_CXX_STANDARD 20)
+cmake_minimum_required(VERSION 4.2)
+find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
+add_executable(benchmark benchmark.cpp)
+target_link_libraries(benchmark ${OpenCV_LIBS})
