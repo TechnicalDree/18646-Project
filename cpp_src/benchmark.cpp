@@ -17,27 +17,32 @@ const char *window_name = "Edge Map";
 static void CannyThreshold(int, void *) {
   blur(src_gray, detected_edges, Size(3, 3));
 
+  const auto start{std::chrono::steady_clock::now()};
   Canny(detected_edges, detected_edges, lowThreshold, lowThreshold * ratio,
         kernel_size);
+  const auto finish{std::chrono::steady_clock::now()};
 
   dst = Scalar::all(0);
 
   src.copyTo(dst, detected_edges);
 
   imshow(window_name, dst);
+
+  const std::chrono::duration<double> elapsed_seconds{finish - start};
+  std::cout << elapsed_seconds << "\n";
 }
 
 int main(int argc, char **argv) {
-  // CommandLineParser parser(argc, argv, "{@input | fruits.jpg | input
-  // image}");
-  /* src = imread(samples::findFile(parser.get<String>("@input")),
+
+  CommandLineParser parser(argc, argv, "{@input | fruits.jpg | input image}");
+  src = imread(samples::findFile(parser.get<String>("@input")),
                IMREAD_COLOR); // Load an image
 
   if (src.empty()) {
     std::cout << "Could not open or find the image!\n" << std::endl;
     std::cout << "Usage: " << argv[0] << " <Input image>" << std::endl;
     return -1;
-  }*/
+  }
 
   dst.create(src.size(), src.type());
 
@@ -45,16 +50,7 @@ int main(int argc, char **argv) {
 
   namedWindow(window_name, WINDOW_AUTOSIZE);
 
-  /* createTrackbar("Min Threshold:", window_name, &lowThreshold,
-     max_lowThreshold, CannyThreshold); */
-
-  const auto start{std::chrono::steady_clock::now()};
   CannyThreshold(0, 0);
-  const auto finish{std::chrono::steady_clock::now()};
-
-  const std::chrono::duration<double> elapsed_seconds{finish - start};
-
-  std::cout << elapsed_seconds << "\n";
 
   waitKey(0);
 
