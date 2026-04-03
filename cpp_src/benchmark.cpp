@@ -1,7 +1,10 @@
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
 #include <chrono>
+#include <filesystem>
 #include <iostream>
+#include <sys/types.h>
+#include <vector>
 
 using namespace cv;
 
@@ -9,12 +12,18 @@ Mat src, src_gray;
 Mat dst, detected_edges;
 
 int lowThreshold = 0;
+const int NUM_LARGE_IMGS = 100;
+const int NUM_SMALL_IMGS = 200;
 const int max_lowThreshold = 100;
 const int ratio = 3;
 const int kernel_size = 3;
 const char *window_name = "Edge Map";
+double large_img_average = 0;
+double small_img_average = 0;
 
-static void CannyThreshold(int, void *) {
+enum img_size { SMALL, LARGE };
+
+static void CannyThreshold(int, void *, img_size size) {
   blur(src_gray, detected_edges, Size(3, 3));
 
   const auto start{std::chrono::steady_clock::now()};
@@ -30,29 +39,54 @@ static void CannyThreshold(int, void *) {
 
   const std::chrono::duration<double> elapsed_seconds{finish - start};
   std::cout << elapsed_seconds << "\n";
+  switch (size) {
+  case LARGE: {
+    large_img_average += elapsed_seconds.count();
+    break;
+  }
+  case SMALL: {
+    small_img_average += elapsed_seconds.count();
+    break;
+  }
+  }
+}
+
+void run_canny_imgs(img_size size, std::string dir_name) {
+  for (const auto &entry : std::filesystem::directory_iterator(dir_name)) {
+    src = imread(entry.path(), IMREAD_COLOR); // Load an image
+    std::cout << entry << std::endl;
+    if (src.empty()) {
+      std::cout << "Could not open or find the image!\n" << std::endl;
+      std::cout << "Usage: " << entry.path() << " <Input image>" << std::endl;
+      return;
+    }
+
+    dst.create(src.size(), src.type());
+
+    cvtColor(src, src_gray, COLOR_BGR2GRAY);
+
+    // namedWindow(window_name, WINDOW_AUTOSIZE);
+
+    CannyThreshold(0, 0, size);
+  }
 }
 
 int main(int argc, char **argv) {
 
-  CommandLineParser parser(argc, argv, "{@input | fruits.jpg | input image}");
-  src = imread(samples::findFile(parser.get<String>("@input")),
-               IMREAD_COLOR); // Load an image
+  // CommandLineParser parser(argc, argv, "{@input | fruits.jpg | input
+  // image}");]
 
-  if (src.empty()) {
-    std::cout << "Could not open or find the image!\n" << std::endl;
-    std::cout << "Usage: " << argv[0] << " <Input image>" << std::endl;
-    return -1;
-  }
+  std::string large_img_dir_name = "2k_img/";
+  std::string small_img_dir_name = "berkeley_img/";
 
-  dst.create(src.size(), src.type());
+  run_canny_imgs(LARGE, large_img_dir_name);
+  run_canny_imgs(SMALL, small_img_dir_name);
 
-  cvtColor(src, src_gray, COLOR_BGR2GRAY);
+  std::cout << "Average Elapsed Time for Large Images: "
+            << large_img_average / NUM_LARGE_IMGS << std::endl;
 
-  namedWindow(window_name, WINDOW_AUTOSIZE);
-
-  CannyThreshold(0, 0);
-
-  waitKey(0);
+  std::cout << "Average Elapsed Time for Small Images: "
+            << small_img_average / NUM_SMALL_IMGS << std::endl;
 
   return 0;
 }
