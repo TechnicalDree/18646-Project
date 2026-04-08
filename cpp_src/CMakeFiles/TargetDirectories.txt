@@ -1,3 +1,0 @@
-/Users/siddarthkunisetty/Downloads/Programming/18-646/18646-Project/cpp_src/CMakeFiles/benchmark.dir
-/Users/siddarthkunisetty/Downloads/Programming/18-646/18646-Project/cpp_src/CMakeFiles/edit_cache.dir
-/Users/siddarthkunisetty/Downloads/Programming/18-646/18646-Project/cpp_src/CMakeFiles/rebuild_cache.dir

@@ -12,7 +12,7 @@ Mat src, src_gray;
 Mat dst, detected_edges;
 
 int lowThreshold = 0;
-const int NUM_LARGE_IMGS = 100;
+const int NUM_LARGE_IMGS = 200;
 const int NUM_SMALL_IMGS = 200;
 const int max_lowThreshold = 100;
 const int ratio = 3;
@@ -54,7 +54,6 @@ static void CannyThreshold(int, void *, img_size size) {
 void run_canny_imgs(img_size size, std::string dir_name) {
   for (const auto &entry : std::filesystem::directory_iterator(dir_name)) {
     src = imread(entry.path(), IMREAD_COLOR); // Load an image
-    std::cout << entry << std::endl;
     if (src.empty()) {
       std::cout << "Could not open or find the image!\n" << std::endl;
       std::cout << "Usage: " << entry.path() << " <Input image>" << std::endl;
@@ -65,21 +64,18 @@ void run_canny_imgs(img_size size, std::string dir_name) {
 
     cvtColor(src, src_gray, COLOR_BGR2GRAY);
 
-    // namedWindow(window_name, WINDOW_AUTOSIZE);
-
     CannyThreshold(0, 0, size);
   }
 }
 
 int main(int argc, char **argv) {
 
-  // CommandLineParser parser(argc, argv, "{@input | fruits.jpg | input
-  // image}");]
-
   std::string large_img_dir_name = "2k_img/";
   std::string small_img_dir_name = "berkeley_img/";
 
+  std::cout << "Edge detection on large images:\n";
   run_canny_imgs(LARGE, large_img_dir_name);
+  std::cout << "Edge detection on small images:\n";
   run_canny_imgs(SMALL, small_img_dir_name);
 
   std::cout << "Average Elapsed Time for Large Images: "
