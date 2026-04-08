@@ -22,7 +22,7 @@ void run_thresholding(
   int accumulator = 0;
 
   const auto start{std::chrono::steady_clock::now()};
-#pragma omp parallel num_threads(4)
+#pragma omp parallel num_threads(8)
   {
     int id = omp_get_thread_num();
     int num_threads = omp_get_num_threads();
@@ -54,7 +54,7 @@ void run_thresholding(
   }
   const auto finish{std::chrono::steady_clock::now()};
   const std::chrono::duration<double> elapsed_seconds{finish - start};
-  std::cout << elapsed_seconds << "\n";
+  std::cout << "Elapsed time for thresholding is: " << elapsed_seconds << "\n";
   return;
 }
 
@@ -103,5 +103,6 @@ int main() {
   run_thresholding(pixels, strong_indices);
   std::cout << "Finished thresholding, writing pixels to file!\n";
   write_image_to_file(pixels, "thresholded.txt");
+  std::cout << "Done writing pixels to file!\n";
   return 0;
 }
