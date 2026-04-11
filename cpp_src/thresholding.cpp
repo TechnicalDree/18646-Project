@@ -98,11 +98,11 @@ int main() {
 
   initialize_pixels(pixels, strong_indices);
   std::cout << "Currently writing pixels to file!\n";
-  write_image_to_file(pixels, "img.txt");
+  write_image_to_file(pixels, "out/img.txt");
   std::cout << "Finished writing pixels, running thresholding!\n";
   run_thresholding(pixels, strong_indices);
   std::cout << "Finished thresholding, writing pixels to file!\n";
-  write_image_to_file(pixels, "thresholded.txt");
+  write_image_to_file(pixels, "out/thresholded.txt");
   std::cout << "Done writing pixels to file!\n";
   return 0;
 }

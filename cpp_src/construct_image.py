@@ -22,5 +22,5 @@ def reconstruct_image(filename, dest_filename):
     new_image.save(dest_filename, "png")
 
 
-reconstruct_image("img.txt", "img.png")
-reconstruct_image("thresholded.txt", "thresholded.png")
+reconstruct_image("out/img.txt", "out/img.png")
+reconstruct_image("out/thresholded.txt", "out/thresholded.png")
