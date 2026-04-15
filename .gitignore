@@ -1,0 +1,44 @@
+# Large image/dataset directories
+cpp_src/2k_img/
+cpp_src/berkeley_img/
+py_src/BSR/
+py_src/BSR_bsds500.tgz
+
+# Build artifacts
+*.o
+*.a
+*.so
+*.out
+*.exe
+
+# CMake build directories
+**/build/
+**/CMakeFiles/
+**/CMakeCache.txt
+**/cmake_install.cmake
+**/Makefile
+
+# CUDA compiled output
+*.cubin
+*.ptx
+*.fatbin
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# macOS
+.DS_Store
+
+# Editor/OS "copy" duplicates (e.g. "file 2.cpp")
+* 2.*
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.synctex.gz
+*.toc
+*.fls
+*.fdb_latexmk
